@@ -1,15 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import { HeroCarousel } from './hero-carousel';
 
 export function MainContent() {
-  const [expandCredits, setExpandCredits] = useState(false);
-
   return (
     <main className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl">
+      {/* Hero Section with Carousel */}
+      <section className="relative flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
+        <HeroCarousel />
+        <div className="relative z-10 text-center max-w-3xl">
           <h1 className="font-[var(--font-display)] text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-foreground leading-tight tracking-tight text-balance mb-4">
             Robert Ross Harburda
           </h1>
@@ -57,33 +57,24 @@ export function MainContent() {
 
       {/* Credits / Recordings Section */}
       <section id="credits" className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
-        {!expandCredits ? (
-          <button
-            onClick={() => setExpandCredits(true)}
-            className="text-3xl sm:text-4xl font-bold text-foreground border-b-4 border-deep-red pb-3 inline-block hover:opacity-75 transition-opacity"
-          >
-            Credits / Recordings
-          </button>
-        ) : (
-          <div className="space-y-8">
-            <div className="max-w-2xl">
-              <h2 className="text-3xl sm:text-4xl font-bold text-foreground border-b-4 border-deep-red pb-3 mb-6 inline-block">
-                Studio Work
-              </h2>
-              <p className="text-base sm:text-lg text-muted leading-relaxed">
-                Placeholder content for Studio Work section. Feature your studio recordings and production credits.
-              </p>
-            </div>
-            <div className="max-w-2xl">
-              <h2 className="text-3xl sm:text-4xl font-bold text-foreground border-b-4 border-deep-red pb-3 mb-6 inline-block">
-                Live Recordings
-              </h2>
-              <p className="text-base sm:text-lg text-muted leading-relaxed">
-                Placeholder content for Live Recordings section. Showcase your live performance recordings and events.
-              </p>
-            </div>
+        <div className="space-y-8">
+          <div className="max-w-2xl">
+            <h2 className="text-3xl sm:text-4xl font-bold text-foreground border-b-4 border-deep-red pb-3 mb-6 inline-block">
+              Studio Work
+            </h2>
+            <p className="text-base sm:text-lg text-muted leading-relaxed">
+              Placeholder content for Studio Work section. Feature your studio recordings and production credits.
+            </p>
           </div>
-        )}
+          <div className="max-w-2xl">
+            <h2 className="text-3xl sm:text-4xl font-bold text-foreground border-b-4 border-deep-red pb-3 mb-6 inline-block">
+              Live Recordings
+            </h2>
+            <p className="text-base sm:text-lg text-muted leading-relaxed">
+              Placeholder content for Live Recordings section. Showcase your live performance recordings and events.
+            </p>
+          </div>
+        </div>
       </section>
 
       {/* Footer Spacing */}

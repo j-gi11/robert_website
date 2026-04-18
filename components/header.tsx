@@ -1,17 +1,36 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCreditsDropdownOpen, setIsCreditsDropdownOpen] = useState(false);
+  const [activePage, setActivePage] = useState('home');
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // Extract page from pathname
+    if (pathname === '/') {
+      setActivePage('home');
+    } else {
+      setActivePage(pathname.replace('/', ''));
+    }
+  }, [pathname]);
 
   const navLinks = [
-    { label: 'About Me', href: '#about', color: 'text-muted-green' },
-    { label: 'Artist Page', href: '#artist', color: 'text-dark-blue' },
-    { label: 'Resume', href: '#resume', color: 'text-bright-purple' },
-    { label: 'Credits/Recordings', href: '#credits', color: 'text-deep-red' },
+    { label: 'About Me', href: '/about', id: 'about', color: '#579D62', bgColor: 'bg-muted-green' },
+    { label: 'Artist Page', href: '/artist', id: 'artist', color: '#2C4B7E', bgColor: 'bg-dark-blue' },
+    { label: 'Resume', href: '/resume', id: 'resume', color: '#8722EE', bgColor: 'bg-bright-purple' },
   ];
+
+  const creditsLinks = [
+    { label: 'Studio Work', href: '/studio-work', id: 'studio-work' },
+    { label: 'Live Recordings', href: '/live-recordings', id: 'live-recordings' },
+  ];
+
+  const isLinkActive = (id: string) => activePage === id;
 
   return (
     <>
@@ -20,12 +39,8 @@ export function Header() {
         <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-4">
           {/* Home Icon */}
           <Link
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            className="inline-flex items-center justify-center w-10 h-10 rounded hover:bg-gray-100 transition-colors"
+            href="/"
+            className="inline-flex items-center justify-center w-10 h-10 rounded hover:bg-gray-100 transition-colors flex-shrink-0"
             aria-label="Home"
           >
             <svg
@@ -44,16 +59,64 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-2 lg:gap-4 flex-wrap justify-end">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className={`text-sm md:text-base whitespace-nowrap transition-colors hover:underline ${link.color}`}
+          <nav className="hidden md:flex items-center justify-end flex-1 gap-4">
+            <div className="flex items-center justify-between gap-4 flex-1 max-w-sm">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.id}
+                  href={link.href}
+                  className={`relative px-3 sm:px-4 py-2 border-2 transition-all ${
+                    isLinkActive(link.id)
+                      ? `border-[${link.color}] bg-[${link.color}]/10`
+                      : 'border-gray-300 hover:border-gray-400'
+                  }`}
+                  style={{
+                    borderColor: isLinkActive(link.id) ? link.color : undefined,
+                    backgroundColor: isLinkActive(link.id) ? `${link.color}15` : undefined,
+                  }}
+                >
+                  <span className="text-black text-xs sm:text-sm font-medium block whitespace-nowrap">
+                    {link.label}
+                  </span>
+                  {isLinkActive(link.id) && (
+                    <div
+                      className="absolute bottom-0 left-0 right-0 h-1"
+                      style={{ backgroundColor: link.color }}
+                    />
+                  )}
+                </Link>
+              ))}
+            </div>
+
+            {/* Credits Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsCreditsDropdownOpen(!isCreditsDropdownOpen)}
+                className="px-3 sm:px-4 py-2 border-2 border-gray-300 hover:border-gray-400 transition-all text-black text-xs sm:text-sm font-medium"
+                style={{
+                  borderColor: isLinkActive('studio-work') || isLinkActive('live-recordings') ? '#B6273E' : undefined,
+                  backgroundColor:
+                    isLinkActive('studio-work') || isLinkActive('live-recordings') ? '#B6273E15' : undefined,
+                }}
               >
-                {link.label}
-              </a>
-            ))}
+                Credits/Recordings
+                <span className="ml-2">▼</span>
+              </button>
+              {isCreditsDropdownOpen && (
+                <div className="absolute top-full right-0 mt-1 bg-white border border-gray-200 rounded shadow-lg z-50 min-w-max">
+                  {creditsLinks.map((link) => (
+                    <Link
+                      key={link.id}
+                      href={link.href}
+                      onClick={() => setIsCreditsDropdownOpen(false)}
+                      className="block px-4 py-2 text-black text-sm hover:bg-gray-100 first:rounded-t last:rounded-b transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           </nav>
 
           {/* Mobile Hamburger Menu */}
@@ -87,15 +150,51 @@ export function Header() {
             onClick={(e) => e.stopPropagation()}
           >
             {navLinks.map((link) => (
-              <a
-                key={link.label}
+              <Link
+                key={link.id}
                 href={link.href}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className={`block px-4 py-2 rounded hover:bg-gray-100 transition-colors ${link.color}`}
+                className={`block px-4 py-2 border-l-4 transition-colors ${
+                  isLinkActive(link.id) ? 'bg-gray-100' : ''
+                }`}
+                style={{
+                  borderLeftColor: link.color,
+                }}
               >
-                {link.label}
-              </a>
+                <span className="text-black text-sm font-medium">{link.label}</span>
+              </Link>
             ))}
+            
+            {/* Mobile Credits Dropdown */}
+            <div>
+              <button
+                onClick={() => setIsCreditsDropdownOpen(!isCreditsDropdownOpen)}
+                className="w-full text-left px-4 py-2 border-l-4 text-black text-sm font-medium transition-colors"
+                style={{
+                  borderLeftColor: '#B6273E',
+                  backgroundColor: isCreditsDropdownOpen ? 'rgba(182, 39, 62, 0.1)' : '',
+                }}
+              >
+                Credits/Recordings {isCreditsDropdownOpen ? '▲' : '▼'}
+              </button>
+              {isCreditsDropdownOpen && (
+                <div className="ml-4 space-y-2 mt-2">
+                  {creditsLinks.map((link) => (
+                    <Link
+                      key={link.id}
+                      href={link.href}
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        setIsCreditsDropdownOpen(false);
+                      }}
+                      className="block px-4 py-2 text-black text-sm hover:bg-gray-100 transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
