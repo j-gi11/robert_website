@@ -65,24 +65,19 @@ export function Header() {
                 <Link
                   key={link.id}
                   href={link.href}
-                  className={`relative px-3 sm:px-4 py-2 border-2 transition-all ${
-                    isLinkActive(link.id)
-                      ? `border-[${link.color}] bg-[${link.color}]/10`
-                      : 'border-gray-300 hover:border-gray-400'
-                  }`}
+                  className="relative px-3 sm:px-4 py-2 transition-all"
                   style={{
-                    borderColor: isLinkActive(link.id) ? link.color : undefined,
-                    backgroundColor: isLinkActive(link.id) ? `${link.color}15` : undefined,
+                    backgroundColor: link.color,
+                    opacity: isLinkActive(link.id) ? 1 : 0.82,
                   }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.opacity = '1'; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.opacity = isLinkActive(link.id) ? '1' : '0.82'; }}
                 >
-                  <span className="text-black text-xs sm:text-sm font-medium block whitespace-nowrap">
+                  <span className="text-white text-xs sm:text-sm font-semibold block whitespace-nowrap">
                     {link.label}
                   </span>
                   {isLinkActive(link.id) && (
-                    <div
-                      className="absolute bottom-0 left-0 right-0 h-1"
-                      style={{ backgroundColor: link.color }}
-                    />
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/40" />
                   )}
                 </Link>
               ))}
@@ -92,12 +87,13 @@ export function Header() {
             <div className="relative">
               <button
                 onClick={() => setIsCreditsDropdownOpen(!isCreditsDropdownOpen)}
-                className="px-3 sm:px-4 py-2 border-2 border-gray-300 hover:border-gray-400 transition-all text-black text-xs sm:text-sm font-medium"
+                className="px-3 sm:px-4 py-2 transition-all text-white text-xs sm:text-sm font-semibold"
                 style={{
-                  borderColor: isLinkActive('studio-work') || isLinkActive('live-recordings') ? '#B6273E' : undefined,
-                  backgroundColor:
-                    isLinkActive('studio-work') || isLinkActive('live-recordings') ? '#B6273E15' : undefined,
+                  backgroundColor: '#B6273E',
+                  opacity: isLinkActive('studio-work') || isLinkActive('live-recordings') ? 1 : 0.82,
                 }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '1'; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = isLinkActive('studio-work') || isLinkActive('live-recordings') ? '1' : '0.82'; }}
               >
                 Credits/Recordings
                 <span className="ml-2">▼</span>

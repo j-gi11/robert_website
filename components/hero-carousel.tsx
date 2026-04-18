@@ -3,47 +3,43 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
+const images = [
+  { src: '/images/hero-1.jpg', alt: 'Recording studio mixing console' },
+  { src: '/images/hero-2.jpg', alt: 'Concert stage with dramatic lighting' },
+  { src: '/images/hero-3.jpg', alt: 'Vintage reel-to-reel tape machine' },
+  { src: '/images/hero-4.jpg', alt: 'Musician silhouette on stage' },
+];
+
 export function HeroCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Placeholder images
-  const images = [
-    '/placeholder.svg',
-    '/placeholder.svg',
-    '/placeholder.svg',
-    '/placeholder.svg',
-  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % images.length);
-    }, 4000); // Change image every 4 seconds
-
+    }, 4000);
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, []);
 
   return (
-    <div className="relative w-full h-full overflow-hidden">
-      {/* Images Container */}
+    <div className="absolute inset-0 w-full h-full overflow-hidden">
       {images.map((image, index) => (
         <div
           key={index}
-          className={`absolute inset-0 transition-opacity duration-1000 ${
-            index === currentIndex ? 'opacity-100' : 'opacity-0'
-          }`}
+          className="absolute inset-0 transition-opacity duration-1500 ease-in-out"
+          style={{ opacity: index === currentIndex ? 1 : 0 }}
         >
           <Image
-            src={image}
-            alt={`Background ${index + 1}`}
+            src={image.src}
+            alt={image.alt}
             fill
-            className="object-cover opacity-10"
+            className="object-cover"
+            style={{ opacity: 0.12 }}
             priority={index === 0}
           />
         </div>
       ))}
-
-      {/* Off-white Overlay */}
-      <div className="absolute inset-0 bg-background/80" />
+      {/* Off-white overlay to keep text legible */}
+      <div className="absolute inset-0 bg-background/75" />
     </div>
   );
 }
