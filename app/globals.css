@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@theme {
+  /* Retro Portfolio Color Palette */
+  --color-background: #F5F5F5;
+  --color-foreground: #1a1a1a;
+  
+  /* Primary Colors */
+  --color-dark-blue: #2C4B7E;
+  --color-bright-purple: #8722EE;
+  --color-muted-orange: #CF924F;
+  --color-muted-green: #579D62;
+  --color-deep-red: #B6273E;
+  
+  /* Text Colors */
+  --color-muted: #6b7280;
+  
+  /* Radius */
+  --radius: 0.5rem;
+  
+  /* Font Families */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-display), "Archivo Black", "Cooper Black", Impact, sans-serif;
+}
+
