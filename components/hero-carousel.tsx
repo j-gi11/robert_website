@@ -33,7 +33,7 @@ export function HeroCarousel() {
             alt={image.alt}
             fill
             className="object-cover"
-            style={{ opacity: 0.12 }}
+            style={{ opacity: 0.50 }}
             priority={index === 0}
           />
         </div>
