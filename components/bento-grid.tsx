@@ -1,193 +1,167 @@
+"use client";
+
+import { useState } from "react";
+import { HeroSection } from "./hero-section";
+import { BentoBox } from "./bento-box";
+import { HomeIcon } from "./home-icon";
+import { PagePlaceholder } from "./page-placeholder";
+import { AboutSection } from "./about-section";
+
+type View = "home" | "artist" | "resume" | "credits" | "live-recordings";
+
 export function BentoGrid() {
-  return (
-    <div className="min-h-screen w-full p-3 md:p-4 lg:p-6 bg-background">
-      <div
-        className="
-          grid 
-          min-h-[calc(100vh-1.5rem)] 
-          md:h-[calc(100vh-2rem)] 
-          lg:h-[calc(100vh-3rem)]
-          gap-3 
-          md:gap-4 
-          grid-cols-2
-          auto-rows-[minmax(80px,auto)]
-          md:grid-cols-12
-          md:grid-rows-6
-        "
-      >
-        {/* Main Header Block - Largest, Top Left */}
-        <div
-          className="
-            col-span-2
-            md:col-span-7 
-            md:row-span-4 
-            bg-background 
-            border border-foreground/10
-            flex 
-            flex-col 
-            justify-center 
-            p-6 
-            md:p-8 
-            lg:p-12
-            min-h-[200px]
-            md:min-h-0
-          "
-        >
-          <h1
+  const [currentView, setCurrentView] = useState<View>("home");
+  const [creditsExpanded, setCreditsExpanded] = useState(false);
+
+  const handleHomeClick = () => {
+    setCurrentView("home");
+    setCreditsExpanded(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleAboutClick = () => {
+    const aboutSection = document.getElementById("about");
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleCreditsClick = () => {
+    if (creditsExpanded) {
+      setCreditsExpanded(false);
+    } else {
+      setCreditsExpanded(true);
+    }
+  };
+
+  // Home/Landing View
+  if (currentView === "home") {
+    return (
+      <main>
+        <HomeIcon onClick={handleHomeClick} />
+
+        {/* Hero Section with Bento Grid */}
+        <div className="min-h-screen w-full p-3 md:p-4 lg:p-6 bg-background">
+          <div
             className="
-              font-[var(--font-display)] 
-              text-4xl 
-              sm:text-5xl 
-              md:text-6xl 
-              lg:text-7xl 
-              xl:text-8xl
-              font-bold 
-              text-foreground 
-              leading-[0.95]
-              tracking-tight
-              text-balance
+              grid 
+              min-h-[calc(100vh-1.5rem)] 
+              md:h-[calc(100vh-2rem)] 
+              lg:h-[calc(100vh-3rem)]
+              gap-3 
+              md:gap-4 
+              grid-cols-2
+              auto-rows-[minmax(80px,auto)]
+              md:grid-cols-12
+              md:grid-rows-4
             "
           >
-            Robert Ross
-            <br />
-            Harburda
-          </h1>
-          <p className="mt-4 md:mt-6 text-muted text-sm md:text-base lg:text-lg tracking-wide uppercase">
-            Audio Engineering / Senior Presentation
-          </p>
+            {/* Main Hero Block */}
+            <HeroSection />
+
+            {/* Bento Boxes - Right Side */}
+            {/* Box 1: About Me - Muted Green */}
+            <BentoBox
+              color="#579D62"
+              label="About Me"
+              onClick={handleAboutClick}
+            />
+
+            {/* Box 2: Artist Page - Dark Blue */}
+            <BentoBox
+              color="#2C4B7E"
+              label="Artist Page"
+              onClick={() => setCurrentView("artist")}
+            />
+
+            {/* Box 3: Resume - Bright Purple */}
+            <BentoBox
+              color="#8722EE"
+              label="Resume"
+              onClick={() => setCurrentView("resume")}
+            />
+
+            {/* Box 4: Credits/Recordings - Deep Red (Dynamic) */}
+            {!creditsExpanded ? (
+              <BentoBox
+                color="#B6273E"
+                label="Credits/Recordings"
+                onClick={handleCreditsClick}
+              />
+            ) : (
+              <>
+                <BentoBox
+                  color="#B6273E"
+                  label="Credits/Studio Work"
+                  onClick={() => setCurrentView("credits")}
+                />
+                <BentoBox
+                  color="#B6273E"
+                  label="Live Recordings"
+                  onClick={() => setCurrentView("live-recordings")}
+                />
+              </>
+            )}
+          </div>
         </div>
 
-        {/* Dark Blue Block - Top Right */}
-        <div
-          className="
-            col-span-2
-            md:col-span-5 
-            md:row-span-2 
-            bg-dark-blue
-            min-h-[100px]
-            md:min-h-0
-          "
-        />
+        {/* About Section */}
+        <AboutSection />
+      </main>
+    );
+  }
 
-        {/* Bright Purple Block */}
-        <div
-          className="
-            col-span-1
-            md:col-span-3 
-            md:row-span-2 
-            bg-bright-purple
-            min-h-[80px]
-            md:min-h-0
-          "
+  // Artist Page
+  if (currentView === "artist") {
+    return (
+      <main>
+        <HomeIcon onClick={handleHomeClick} />
+        <PagePlaceholder
+          title="Artist Page"
+          description="Explore Robert Ross Harburda's artistic endeavors, discography, and creative projects."
         />
+      </main>
+    );
+  }
 
-        {/* Muted Orange Block */}
-        <div
-          className="
-            col-span-1
-            md:col-span-2 
-            md:row-span-2 
-            bg-muted-orange
-            min-h-[80px]
-            md:min-h-0
-          "
+  // Resume Page
+  if (currentView === "resume") {
+    return (
+      <main>
+        <HomeIcon onClick={handleHomeClick} />
+        <PagePlaceholder
+          title="Resume"
+          description="Professional experience, skills, and credentials in audio engineering and production."
         />
+      </main>
+    );
+  }
 
-        {/* Deep Red Block with Text */}
-        <div
-          className="
-            col-span-2
-            md:col-span-4 
-            md:row-span-2 
-            bg-deep-red
-            flex
-            items-center
-            justify-center
-            p-4
-            md:p-6
-            min-h-[120px]
-            md:min-h-0
-          "
-        >
-          <p
-            className="
-              text-white 
-              text-lg 
-              sm:text-xl 
-              md:text-2xl 
-              lg:text-3xl
-              font-bold
-              text-center
-              leading-tight
-              tracking-wide
-            "
-          >
-            Engineer
-            <br />
-            Artist &amp; Producer
-          </p>
-        </div>
-
-        {/* Muted Green Block */}
-        <div
-          className="
-            col-span-1
-            md:col-span-3 
-            md:row-span-2 
-            bg-muted-green
-            min-h-[80px]
-            md:min-h-0
-          "
+  // Credits Page
+  if (currentView === "credits") {
+    return (
+      <main>
+        <HomeIcon onClick={handleHomeClick} />
+        <PagePlaceholder
+          title="Credits & Studio Work"
+          description="Notable projects, collaborations, and studio engineering work."
         />
+      </main>
+    );
+  }
 
-        {/* Small Purple Block */}
-        <div
-          className="
-            col-span-1
-            md:col-span-2 
-            md:row-span-1 
-            bg-bright-purple
-            min-h-[60px]
-            md:min-h-0
-          "
+  // Live Recordings Page
+  if (currentView === "live-recordings") {
+    return (
+      <main>
+        <HomeIcon onClick={handleHomeClick} />
+        <PagePlaceholder
+          title="Live Recordings"
+          description="Collection of live performances and recordings featuring Robert Ross Harburda."
         />
+      </main>
+    );
+  }
 
-        {/* Small Orange Block */}
-        <div
-          className="
-            col-span-1
-            md:col-span-3 
-            md:row-span-1 
-            bg-muted-orange
-            min-h-[60px]
-            md:min-h-0
-          "
-        />
-
-        {/* Small Blue Block */}
-        <div
-          className="
-            col-span-1
-            md:col-span-2 
-            md:row-span-1 
-            bg-dark-blue
-            min-h-[60px]
-            md:min-h-0
-          "
-        />
-
-        {/* Small Green Block */}
-        <div
-          className="
-            col-span-2
-            md:col-span-3 
-            md:row-span-1 
-            bg-muted-green
-            min-h-[60px]
-            md:min-h-0
-          "
-        />
-      </div>
-    </div>
-  );
+  return null;
 }
