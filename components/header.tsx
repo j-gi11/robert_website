@@ -150,9 +150,8 @@ export function Header() {
                 key={link.id}
                 href={link.href}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className={`block px-4 py-2 border-l-4 transition-colors ${
-                  isLinkActive(link.id) ? 'bg-gray-100' : ''
-                }`}
+                className={`block px-4 py-2 border-l-4 transition-colors ${isLinkActive(link.id) ? 'bg-gray-100' : ''
+                  }`}
                 style={{
                   borderLeftColor: link.color,
                 }}
@@ -160,7 +159,7 @@ export function Header() {
                 <span className="text-black text-sm font-medium">{link.label}</span>
               </Link>
             ))}
-            
+
             {/* Mobile Credits Dropdown */}
             <div>
               <button
