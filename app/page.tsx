@@ -1,9 +1,11 @@
-import { BentoGrid } from "@/components/bento-grid";
+import { Header } from "@/components/header";
+import { MainContent } from "@/components/main-content";
 
 export default function Home() {
   return (
-    <main>
-      <BentoGrid />
-    </main>
+    <>
+      <Header />
+      <MainContent />
+    </>
   );
 }
