@@ -1,0 +1,145 @@
+.header {
+  position: sticky;
+  top: 0;
+  background-color: rgba(244, 244, 244, 0.94);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--ink);
+  z-index: 100;
+}
+
+.desktop {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 60px;
+  gap: 40px;
+}
+
+.mobile {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 16px;
+}
+
+.wordmark {
+  font-family: 'Bauhaus 93', Poppins, Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--ink);
+  text-decoration: none;
+  display: block;
+  flex-shrink: 0;
+}
+
+.nav {
+  display: flex;
+  gap: 40px;
+  flex: 1;
+  justify-content: flex-start;
+}
+
+.navLink {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+  padding-bottom: 3px;
+  border-bottom: 3px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.navLink[data-active='true'] {
+  border-bottom-color: var(--crimson);
+}
+
+.navLink[data-active='false']:hover {
+  border-bottom-color: transparent;
+}
+
+@media (hover: hover) {
+  .navLink:hover {
+    border-bottom-color: var(--crimson);
+  }
+}
+
+.instagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 2px solid var(--ink);
+  border-radius: 9px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease;
+}
+
+.instagram:focus-visible {
+  outline: 2px solid var(--crimson);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .instagram:hover {
+    background-color: var(--ink);
+  }
+
+  .instagram:hover svg {
+    stroke: var(--bg);
+  }
+}
+
+.mobileRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hamburger {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--ink);
+  background: none;
+  border: 2px solid var(--ink);
+  border-radius: 9px;
+  transition: background-color 0.2s ease;
+}
+
+.hamburger:focus-visible {
+  outline: 2px solid var(--crimson);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .hamburger:hover {
+    background-color: var(--ink);
+    color: var(--bg);
+  }
+}
+
+@media (min-width: 768px) {
+  .desktop {
+    display: flex !important;
+  }
+  .mobile {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .desktop {
+    display: none !important;
+  }
+  .mobile {
+    display: flex !important;
+  }
+}
