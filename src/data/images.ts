@@ -13,6 +13,11 @@
 
 type Glob = Record<string, string>
 
+const about = import.meta.glob('../assets/about/*.{jpg,jpeg,png,webp,avif}', {
+  eager: true,
+  import: 'default',
+}) as Glob
+
 const credits = import.meta.glob('../assets/credits/*.{jpg,jpeg,png,webp,avif}', {
   eager: true,
   import: 'default',
@@ -23,7 +28,7 @@ const gigs = import.meta.glob('../assets/gigs/*.{jpg,jpeg,png,webp,avif}', {
   import: 'default',
 }) as Glob
 
-const hero = import.meta.glob('../assets/hero/*.{jpg,jpeg,png,webp,avif}', {
+const home = import.meta.glob('../assets/home/*.{jpg,jpeg,png,webp,avif}', {
   eager: true,
   import: 'default',
 }) as Glob
@@ -43,9 +48,10 @@ function index(glob: Glob): Record<string, string> {
 }
 
 const REGISTRY = {
+  about: index(about),
   credits: index(credits),
   gigs: index(gigs),
-  hero: index(hero),
+  home: index(home),
   misc: index(misc),
 } as const
 

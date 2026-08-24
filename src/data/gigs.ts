@@ -15,33 +15,8 @@ export interface Gig {
   action: string
 }
 
-/** SAMPLE DATA — replace with Ross's real dates. */
-export const GIGS: Gig[] = [
-  {
-    slug: 'birdland-2026-09-12',
-    startsAt: '2026-09-12T20:00:00-04:00',
-    venue: 'Birdland Jazz Club',
-    city: 'New York, NY',
-    url: '#',
-    action: 'Tickets',
-  },
-  {
-    slug: 'bar-lunatico-2026-10-03',
-    startsAt: '2026-10-03T21:30:00-04:00',
-    venue: 'Bar Lunàtico',
-    city: 'Brooklyn, NY',
-    url: null,
-    action: 'Free entry',
-  },
-  {
-    slug: 'owl-music-parlor-2026-10-24',
-    startsAt: '2026-10-24T19:00:00-04:00',
-    venue: 'The Owl Music Parlor',
-    city: 'Brooklyn, NY',
-    url: '#',
-    action: 'Tickets',
-  },
-]
+/** No shows booked at the moment. Add real dates here when scheduled. */
+export const GIGS: Gig[] = []
 
 /** "SEP 12, 2026 · 8:00 PM" */
 export function formatGigDate(startsAt: string): string {

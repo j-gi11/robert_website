@@ -26,8 +26,11 @@ it is long and the sections are independent.
 
 ## Constraints
 
-- No new dependencies. `react`, `react-dom`, `react-router-dom` only.
-- No Tailwind, styled-components, or any UI or animation library.
+- New dependencies require consulting the user first. Currently approved:
+  `react`, `react-dom`, `react-router-dom`, `@mui/material`,
+  `@mui/icons-material`, `@emotion/react`, `@emotion/styled` (MUI icons only —
+  not its component library, theming, or styling system).
+- No Tailwind, styled-components, or any animation library.
 - Don't write tests or READMEs unless asked.
 - Don't modify files outside the ones the task named.
 

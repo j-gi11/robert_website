@@ -31,91 +31,47 @@ export interface Credit {
   color: PaletteKey
 }
 
-/**
- * SAMPLE DATA — every entry below is placeholder content from the mockup and
- * must be replaced wholesale when Ross's real credit list arrives. Keep the
- * shape, throw away the values.
- */
 export const CREDITS: Credit[] = [
   {
-    slug: 'nadia-vance-blue-hour',
-    artist: 'Nadia Vance',
-    title: 'Blue Hour',
-    format: 'EP',
-    roles: ['Mixing Engineer', 'Guitarist'],
-    links: { Spotify: '#', 'Apple Music': '#' },
-    year: 2025,
-    color: 'navy',
-  },
-  {
-    slug: 'the-ellis-quartet-nightshift',
-    artist: 'The Ellis Quartet',
-    title: 'Nightshift',
-    format: 'Album',
-    roles: ['Producer', 'Tracking Engineer', 'Trumpet'],
-    links: { Spotify: '#', Bandcamp: '#', 'Apple Music': '#' },
-    year: 2025,
-    color: 'crimson',
-  },
-  {
-    slug: 'junia-paper-cranes',
-    artist: 'Junia',
-    title: 'Paper Cranes',
+    slug: 'kate-hunter-time',
+    artist: 'Kate Hutner',
+    title: 'TIME',
     format: 'Single',
-    roles: ['Producer', 'Composer', 'Keys'],
-    links: { Spotify: '#', 'Apple Music': '#' },
-    year: 2024,
+    roles: ['Tracking Engineer', 'Mastering Engineer', 'Producer'],
+    links: {
+      Spotify: 'https://open.spotify.com/track/20dIgfy4JrXif0ALtALhFe?si=80234a57486843e2',
+      'Apple Music': 'https://music.apple.com/us/song/time/1863160244',
+    },
+    year: 2026, // TODO: confirm actual release year
     color: 'purple',
   },
   {
-    slug: 'marcus-bell-big-band-two-bridges',
-    artist: 'Marcus Bell Big Band',
-    title: 'Two Bridges',
-    format: 'Album',
-    roles: ['Assistant Engineer', 'Trumpet'],
-    links: { Spotify: '#', Bandcamp: '#' },
-    year: 2024,
-    color: 'gold',
-  },
-  {
-    slug: 'soft-arrivals-held',
-    artist: 'Soft Arrivals',
-    title: 'Held',
-    format: 'EP',
-    roles: ['Mixing Engineer', 'Bassist'],
-    links: { Spotify: '#', 'Apple Music': '#', Bandcamp: '#' },
-    year: 2024,
-    color: 'green',
-  },
-  {
-    slug: 'odessa-ray-cold-bloom',
-    artist: 'Odessa Ray',
-    title: 'Cold Bloom',
+    slug: 'lone-wolf-syndrome-dear-hunter',
+    artist: 'Lone Wolf Syndrome',
+    title: 'Dear Hunter',
     format: 'Single',
-    roles: ['Mastering Engineer'],
-    links: { Spotify: '#' },
-    year: 2023,
-    color: 'crimson',
-  },
-  {
-    slug: 'the-fifth-floor-loose-change',
-    artist: 'The Fifth Floor',
-    title: 'Loose Change',
-    format: 'Album',
-    roles: ['Producer', 'Bassist', 'Guitarist'],
-    links: { Spotify: '#', 'Apple Music': '#' },
-    year: 2023,
+    roles: ['Trumpet'],
+    links: {
+      Spotify: 'https://open.spotify.com/track/6ckm9fgIlwrj2eBClVBB0r?si=fe424bcbc2ee4ce2',
+      'Apple Music': 'https://music.apple.com/us/album/dear-hunter-single/6768586438',
+      Bandcamp: 'https://lonewolfsyndrome.bandcamp.com/track/dear-hunter',
+    },
+    year: 2026, // TODO: confirm actual release year
     color: 'navy',
   },
   {
-    slug: 'camille-okoye-salt-air',
-    artist: 'Camille Okoye',
-    title: 'Salt Air',
-    format: 'EP',
-    roles: ['Tracking Engineer', 'Keys'],
-    links: { Bandcamp: '#', 'Apple Music': '#' },
-    year: 2022,
-    color: 'purple',
+    slug: 'wax-jaw-secret-of-the-night',
+    artist: 'Wax Jaw',
+    title: 'Secret Of The Night',
+    format: 'Single',
+    roles: ['Assistant Engineer'],
+    links: {
+      Spotify: 'https://open.spotify.com/track/5AhKNKOlO8bjFMKvH8OdTC?si=5658c3a404fc49fe',
+      'Apple Music': 'https://music.apple.com/us/song/secret-of-the-night/1828291433',
+      Bandcamp: 'https://wax-jaw.bandcamp.com/track/secret-of-the-night',
+    },
+    year: 2026, // TODO: confirm actual release year
+    color: 'crimson',
   },
 ]
 

@@ -5,19 +5,31 @@ import { palette } from '../theme'
 import styles from './Home.module.css'
 
 interface HeroCellConfig {
-  slug: string
+  key: string
   color: string
   label: string
   link: string
-  isRole?: boolean
 }
 
 const heroCells: HeroCellConfig[] = [
-  { slug: 'session', color: palette.green, label: 'session', link: '/artist' },
-  { slug: 'gig', color: palette.navy, label: 'gig', link: '/artist' },
-  { slug: 'control-room', color: palette.purple, label: 'control-room', link: '/credits' },
-  { slug: 'live', color: palette.gold, label: 'live', link: '/artist' },
+  { key: 'session', color: palette.green, label: 'session', link: '/artist' },
+  { key: 'gig', color: palette.navy, label: 'gig', link: '/artist' },
+  { key: 'control-room', color: palette.purple, label: 'control-room', link: '/credits' },
+  { key: 'live', color: palette.gold, label: 'live', link: '/artist' },
 ]
+
+/**
+ * Shared photo pool for the hero grid. Each cell holds an index into this
+ * pool; with 4 cells and 5 photos there's always exactly one "resting"
+ * index not currently assigned to any cell. A cell advances by picking up
+ * whatever is resting, so no photo is ever on screen in two cells at once.
+ */
+const PHOTO_POOL = ['studio-duo', 'ensemble-session', 'control-desk', 'piano-horns', 'tetons']
+const ROTATE_INTERVAL_MS = 5000
+/** Random jitter applied to each cell's own interval, so cells drift out of lockstep. */
+const ROTATE_JITTER_MS = 1800
+/** Stagger between cells' first tick, so they don't all change together. */
+const STAGGER_MS = ROTATE_INTERVAL_MS / heroCells.length
 
 interface CellRef {
   element: HTMLDivElement | null
@@ -27,6 +39,10 @@ interface CellRef {
 export default function Home() {
   const cellRefs = useRef<Map<string, CellRef>>(new Map())
   const [visibleCells, setVisibleCells] = useState<Set<string>>(new Set())
+  const [activeIndices, setActiveIndices] = useState<number[]>(
+    heroCells.map((_, i) => i),
+  )
+  const hoveredKeysRef = useRef<Set<string>>(new Set())
 
   useEffect(() => {
     // Mobile scroll-into-view effect
@@ -57,6 +73,33 @@ export default function Home() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const timeoutIds: number[] = []
+
+    const scheduleCell = (ci: number) => {
+      const tick = () => {
+        if (!hoveredKeysRef.current.has(heroCells[ci].key)) {
+          setActiveIndices((prev) => {
+            const resting = [0, 1, 2, 3, 4].find((i) => !prev.includes(i))
+            if (resting === undefined) return prev
+            const next = [...prev]
+            next[ci] = resting
+            return next
+          })
+        }
+        const jitter = ROTATE_INTERVAL_MS + (Math.random() * ROTATE_JITTER_MS - ROTATE_JITTER_MS / 2)
+        timeoutIds[ci] = window.setTimeout(tick, jitter)
+      }
+      timeoutIds[ci] = window.setTimeout(tick, ci * STAGGER_MS + Math.random() * 500)
+    }
+
+    heroCells.forEach((_, ci) => scheduleCell(ci))
+
+    return () => timeoutIds.forEach((id) => clearTimeout(id))
+  }, [])
+
   return (
     <div>
       <div className={styles.hero}>
@@ -69,8 +112,9 @@ export default function Home() {
         </div>
 
         {/* Photo Blocks */}
-        {heroCells.map((cell) => {
-          const imageUrl = image('hero', cell.slug)
+        {heroCells.map((cell, ci) => {
+          const activeSlug = PHOTO_POOL[activeIndices[ci]]
+          const activeUrl = image('home', activeSlug)
           const blockClass =
             cell.label === 'session'
               ? styles.sessionBlock
@@ -82,25 +126,43 @@ export default function Home() {
 
           return (
             <div
-              key={cell.slug}
-              className={`${styles.heroCell} ${blockClass} ${visibleCells.has(cell.slug) ? styles.visible : ''}`}
+              key={cell.key}
+              className={`${styles.heroCell} ${blockClass} ${visibleCells.has(cell.key) ? styles.visible : ''}`}
               style={{
                 backgroundColor: cell.color,
               }}
-              data-cell={cell.slug}
+              data-cell={cell.key}
               ref={(el) => {
                 if (el) {
-                  cellRefs.current.set(cell.slug, { element: el, visible: false })
+                  cellRefs.current.set(cell.key, { element: el, visible: false })
                 }
               }}
+              onMouseEnter={() => hoveredKeysRef.current.add(cell.key)}
+              onMouseLeave={() => hoveredKeysRef.current.delete(cell.key)}
+              onTouchStart={() => hoveredKeysRef.current.add(cell.key)}
+              onTouchEnd={() => hoveredKeysRef.current.delete(cell.key)}
             >
               <div className={styles.colorOverlay} style={{ backgroundColor: cell.color }} />
 
-              {imageUrl && (
-                <img
-                  src={imageUrl}
-                  alt={cell.label}
-                  className={styles.photoImage}
+              {PHOTO_POOL.map((slug, pi) => {
+                const url = image('home', slug)
+                if (!url) return null
+                const isActive = pi === activeIndices[ci]
+                return (
+                  <img
+                    key={slug}
+                    src={url}
+                    alt={isActive ? cell.label : ''}
+                    className={`${styles.cyclePhoto} ${isActive ? styles.cyclePhotoActive : ''}`}
+                  />
+                )
+              })}
+
+              {activeUrl && (
+                <div
+                  className={styles.photoHoverOverlay}
+                  style={{ backgroundImage: `url(${activeUrl})` }}
+                  aria-hidden="true"
                 />
               )}
 
@@ -121,7 +183,7 @@ export default function Home() {
 
       <div className={styles.content}>
         <p className={styles.blurb}>
-          Robert Ross Recording is a one man army run by Robert Ross Harburda — Ross. Working out of NYC, at the world famous jazz club Birdland. Classical orchestras, big band jazz, DIY house shows: all production sizes and budgets.
+          Currently operating out of NYC, Robert Ross Recording offers studio recording, mixing, mastering, production, live sound, as well as session and live musician services.
         </p>
 
         <Link to="/about#booking" className={styles.ctaButton}>

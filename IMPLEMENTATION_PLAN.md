@@ -93,7 +93,18 @@ first.** They are the contract; components consume, never restate.
 
 ### Filter semantics (get this right)
 
-Selecting nothing shows everything. you can only select one filter or no filters.  
+The filter bar is **single-select, not multi-select**: at most one of the
+three pills (`STUDIO MUSICIAN` / `PRODUCTION & COMPOSITION` / `ENGINEER`) can
+be active at a time. Clicking an inactive pill selects it and deselects
+whatever was active; clicking the active pill deselects it. Active state is
+`GroupKey | null`, never an array. Selecting nothing shows everything;
+selecting a pill shows only credits whose derived roles include that group.
+
+`matchesFilter()` in `taxonomy.ts` takes `active: readonly GroupKey[]` and
+ANDs across every key in it — that generality is harmless since the UI only
+ever calls it with zero or one key, but it means the function itself does not
+enforce single-select. That's the `FilterBar`/`Credits` component's job: call
+`setActive` with a single `GroupKey | null`, never build a multi-key array.
 
 ---
 
@@ -271,8 +282,10 @@ Eyebrow `STUDIO`, heading `Credits`.
 
 - Left: the standing label `FILTER BY` in grey mono caps, then the three pills
   from `GROUPS` — `STUDIO MUSICIAN`, `PRODUCTION & COMPOSITION`, `ENGINEER`.
-  Multi-select toggles; "all" is the default. A selected pill fills with its
-  group colour (navy / purple / crimson), white type, and shows a `✓`.
+  **Single-select**: clicking a pill activates it and deactivates any other
+  (clicking the active one clears it); "none active" is the default and shows
+  everything. A selected pill fills with its group colour (navy / purple /
+  crimson), white type, and shows a `✓`.
 - Right: a live result count `"6 of 8"` that updates the instant anything
   toggles, a `clear` text button shown only when something is active, and —
   held visually apart from the filters — a crimson **`Contact me →`** link to

@@ -8,7 +8,7 @@
  */
 
 const INSTAGRAM_HANDLE = 'robert_ross_music'
-const EMAIL = 'ross@robertrossrecording.com'
+const EMAIL = 'robertrossrecording@gmail.com'
 
 export const site = {
   /** Legal/display name of the business. Used in wordmark, footer, <title>. */

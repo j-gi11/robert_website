@@ -25,7 +25,7 @@
   right: 0;
   bottom: 0;
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr auto;
+  grid-template-rows: 1fr 1fr 1fr 1fr auto;
   grid-template-columns: 1fr;
   z-index: 201;
   animation: slideUp 160ms ease;
@@ -57,14 +57,18 @@
 }
 
 .linkBlock:nth-child(1) {
-  background-color: var(--green);
+  background-color: var(--navy);
 }
 
 .linkBlock:nth-child(2) {
-  background-color: var(--purple);
+  background-color: var(--green);
 }
 
 .linkBlock:nth-child(3) {
+  background-color: var(--purple);
+}
+
+.linkBlock:nth-child(4) {
   background-color: var(--crimson);
 }
 
@@ -101,8 +105,7 @@
   background: none;
   border: none;
   color: var(--bg);
-  font-size: 32px;
-  font-weight: 700;
+  font-size: 26px;
   cursor: pointer;
   padding: 0;
   width: 32px;

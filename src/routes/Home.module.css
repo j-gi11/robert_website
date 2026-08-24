@@ -16,6 +16,7 @@
   .hero {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: auto auto 120px 120px;
+    margin-bottom: 0;
   }
 }
 
@@ -53,6 +54,13 @@
   }
 }
 
+@media (min-width: 1200px) {
+  .titleText {
+    font-size: 100px;
+    line-height: 1.15;
+  }
+}
+
 .heroCell {
   position: relative;
   overflow: hidden;
@@ -64,7 +72,7 @@
 }
 
 @media (hover: hover) {
-  .heroCell:hover .photoImage {
+  .heroCell:hover .photoHoverOverlay {
     opacity: 1;
   }
 
@@ -79,7 +87,7 @@
   background-color: var(--crimson);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   cursor: default;
   padding: 0 34px;
 }
@@ -92,7 +100,7 @@
     padding: 22px 20px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
   }
 }
 
@@ -163,7 +171,7 @@
   font-size: 38px;
   line-height: 1.08;
   letter-spacing: -0.02em;
-  text-align: center;
+  text-align: left;
 }
 
 @media (max-width: 1199px) {
@@ -173,7 +181,7 @@
   }
 }
 
-.photoImage {
+.cyclePhoto {
   position: absolute;
   top: 0;
   left: 0;
@@ -181,20 +189,24 @@
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  transition: opacity 450ms ease;
+  transition: opacity 1.5s ease;
 }
 
-@media (max-width: 1199px) {
-  .photoImage {
-    opacity: 0;
-  }
+.heroCell.visible .cyclePhoto.cyclePhotoActive {
+  opacity: 1;
+}
 
-  .sessionBlock.visible .photoImage,
-  .gigBlock.visible .photoImage,
-  .controlRoomBlock.visible .photoImage,
-  .liveBlock.visible .photoImage {
-    opacity: 1;
-  }
+.photoHoverOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 450ms ease;
+  pointer-events: none;
 }
 
 .colorOverlay {
@@ -299,43 +311,17 @@
   outline-offset: 2px;
 }
 
-@keyframes breathe {
-  0%, 100% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-@media (max-width: 1199px) {
-  .sessionBlock.visible .photoImage {
-    animation: breathe 14s ease-in-out infinite;
-    animation-delay: 0s;
-  }
-
-  .gigBlock.visible .photoImage {
-    animation: breathe 14s ease-in-out infinite;
-    animation-delay: 3.5s;
-  }
-
-  .controlRoomBlock.visible .photoImage {
-    animation: breathe 14s ease-in-out infinite;
-    animation-delay: 7s;
-  }
-
-  .liveBlock.visible .photoImage {
-    animation: breathe 14s ease-in-out infinite;
-    animation-delay: 10.5s;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .heroCell,
-  .photoImage,
+  .cyclePhoto,
+  .photoHoverOverlay,
   .colorOverlay,
   .caption,
   .ctaButton {
     transition: none;
+  }
+
+  .heroCell.visible .cyclePhoto.cyclePhotoActive {
+    opacity: 1;
   }
 }

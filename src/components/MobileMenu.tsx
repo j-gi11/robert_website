@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import { site } from '../data/site'
 import styles from './MobileMenu.module.css'
 
@@ -52,11 +53,12 @@ export default function MobileMenu({ isOpen, onClose, navLinks }: MobileMenuProp
         <div className={styles.footer}>
           <span className={styles.handle}>{site.instagram.displayCaps}</span>
           <button
+            type="button"
             className={styles.close}
             onClick={onClose}
             aria-label="Close menu"
           >
-            ×
+            <CloseRoundedIcon fontSize="inherit" />
           </button>
         </div>
       </div>
