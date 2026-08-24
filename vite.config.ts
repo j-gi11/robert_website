@@ -4,6 +4,9 @@ import { copyFileSync } from 'fs'
 import { join } from 'path'
 
 export default defineConfig({
+  // GitHub Pages project-site path. Only needed until a custom domain
+  // (robertrossrecording.com) is attached, at which point this becomes '/'.
+  base: '/robert_website/',
   plugins: [
     react(),
     {
