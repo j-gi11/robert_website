@@ -71,3 +71,11 @@ export function image(folder: ImageFolder, slug: string | undefined): string | u
   }
   return url
 }
+
+/**
+ * All resolved URLs for the given folder(s), for preloading a page's photos
+ * before the page reveals itself. See `useImagesReady`.
+ */
+export function imageUrls(...folders: ImageFolder[]): string[] {
+  return folders.flatMap((folder) => Object.values(REGISTRY[folder]))
+}

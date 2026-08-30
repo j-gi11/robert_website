@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { formatGigDate, past, upcoming } from '../data/gigs'
 import { palette } from '../theme'
+import { imageUrls } from '../data/images'
 import Image from '../components/Image'
+import PageImageGate from '../components/PageImageGate'
 import styles from './Artist.module.css'
 
 const UPCOMING = upcoming()
@@ -12,6 +14,7 @@ const CYCLE_SLUGS = ['gig-1', 'gig-2']
 const CYCLE_INTERVAL_MS = 6000
 
 export default function Artist() {
+  const artistImages = useMemo(() => imageUrls('gigs', 'misc'), [])
   const [hoveredIndex, setHoveredIndex] = useState(0)
   const hoveredGig = UPCOMING[hoveredIndex]
 
@@ -27,6 +30,7 @@ export default function Artist() {
   }, [])
 
   return (
+    <PageImageGate images={artistImages}>
     <main className={styles.artist}>
       <section className={styles.pagePad}>
         <span className={styles.eyebrow}>01 — LIVE</span>
@@ -142,5 +146,6 @@ export default function Artist() {
         </div>
       </section>
     </main>
+    </PageImageGate>
   )
 }

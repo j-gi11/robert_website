@@ -1,12 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { CREDITS, Credit } from '../data/credits'
 import { matchesFilter, GroupKey } from '../data/taxonomy'
+import { imageUrls } from '../data/images'
 import FilterBar from '../components/FilterBar'
 import CreditTile from '../components/CreditTile'
 import ListenModal from '../components/ListenModal'
+import PageImageGate from '../components/PageImageGate'
 import styles from './Credits.module.css'
 
 const SORTED_CREDITS = [...CREDITS].sort((a, b) => b.year - a.year)
+const CREDIT_IMAGES = imageUrls('credits')
 
 export default function Credits() {
   const [active, setActive] = useState<GroupKey | null>(null)
@@ -38,6 +41,7 @@ export default function Credits() {
   }, [openCredit])
 
   return (
+    <PageImageGate images={CREDIT_IMAGES}>
     <main className={styles.credits}>
       <div className={styles.pagePad}>
         <span className={styles.eyebrow}>STUDIO</span>
@@ -64,5 +68,6 @@ export default function Credits() {
 
       <ListenModal credit={openCredit} onClose={handleClose} />
     </main>
+    </PageImageGate>
   )
 }

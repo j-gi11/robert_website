@@ -1,11 +1,16 @@
 import InstagramIcon from '@mui/icons-material/Instagram'
 import { site } from '../data/site'
+import { imageUrls } from '../data/images'
 import Image from '../components/Image'
 import BookingForm from '../components/BookingForm'
+import PageImageGate from '../components/PageImageGate'
 import styles from './About.module.css'
+
+const ABOUT_IMAGES = imageUrls('about')
 
 export default function About() {
   return (
+    <PageImageGate images={ABOUT_IMAGES}>
     <main className={styles.about}>
       <div className={styles.topHalf}>
         <div className={styles.container}>
@@ -46,5 +51,6 @@ export default function About() {
 
       <BookingForm />
     </main>
+    </PageImageGate>
   )
 }

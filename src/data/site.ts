@@ -40,11 +40,13 @@ export const site = {
 
   /**
    * Booking form POST target. GitHub Pages is static, so the form needs a
-   * third-party endpoint. Formspree is the default; swap the URL only.
-   * Until a real endpoint exists this stays null and the form falls back to
-   * a mailto: composition (see IMPLEMENTATION_PLAN.md §8).
+   * third-party endpoint. This is a Google Apps Script Web App (deployed
+   * from Ross's own Google account) whose `doPost` emails the submission to
+   * `email` above via MailApp — see IMPLEMENTATION_PLAN.md §8. Until a real
+   * endpoint exists this stays null and the form falls back to a mailto:
+   * composition.
    */
-  formEndpoint: null as string | null,
+  formEndpoint: 'https://script.google.com/macros/s/AKfycbxQUtpuvOvkvWHElrf2evKAMrY53Zbowv0DRXpps46RSEhLrBFZ-N2Z3AcZalABgRQz_g/exec' as string | null,
 
   /** Default <meta description> / OG description. */
   description:

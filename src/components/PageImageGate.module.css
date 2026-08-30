@@ -1,0 +1,15 @@
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.revealed {
+  opacity: 1;
+  transition: opacity 240ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .revealed {
+    transition: none;
+  }
+}

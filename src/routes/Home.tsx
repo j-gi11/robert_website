@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { image } from '../data/images'
+import { image, imageUrls } from '../data/images'
 import { palette } from '../theme'
+import PageImageGate from '../components/PageImageGate'
 import styles from './Home.module.css'
 
 interface HeroCellConfig {
@@ -25,11 +26,16 @@ const heroCells: HeroCellConfig[] = [
  * whatever is resting, so no photo is ever on screen in two cells at once.
  */
 const PHOTO_POOL = ['studio-duo', 'ensemble-session', 'control-desk', 'piano-horns', 'tetons']
-const ROTATE_INTERVAL_MS = 5000
-/** Random jitter applied to each cell's own interval, so cells drift out of lockstep. */
-const ROTATE_JITTER_MS = 1800
-/** Stagger between cells' first tick, so they don't all change together. */
-const STAGGER_MS = ROTATE_INTERVAL_MS / heroCells.length
+/** How long a photo stays fully shown before the cell dips to its color. */
+const PHOTO_HOLD_MS = 5000
+/** Random jitter on the photo-hold length — wide, so cells drift well out of lockstep. */
+const HOLD_JITTER_MS = 3200
+/** How long the cell rests on pure color (desktop only) before the next photo fades in. */
+const COLOR_HOLD_MS = 2200
+/** Random jitter on the color-hold length. */
+const COLOR_JITTER_MS = 1400
+
+const randomBetween = (base: number, jitter: number) => base + (Math.random() * jitter - jitter / 2)
 
 interface CellRef {
   element: HTMLDivElement | null
@@ -37,12 +43,17 @@ interface CellRef {
 }
 
 export default function Home() {
+  const homeImages = useMemo(() => imageUrls('home'), [])
   const cellRefs = useRef<Map<string, CellRef>>(new Map())
   const [visibleCells, setVisibleCells] = useState<Set<string>>(new Set())
   const [activeIndices, setActiveIndices] = useState<number[]>(
     heroCells.map((_, i) => i),
   )
+  const [phases, setPhases] = useState<('photo' | 'color')[]>(
+    heroCells.map(() => 'photo'),
+  )
   const hoveredKeysRef = useRef<Set<string>>(new Set())
+  const phasesRef = useRef<('photo' | 'color')[]>(heroCells.map(() => 'photo'))
 
   useEffect(() => {
     // Mobile scroll-into-view effect
@@ -78,31 +89,74 @@ export default function Home() {
 
     const timeoutIds: number[] = []
 
-    const scheduleCell = (ci: number) => {
-      const tick = () => {
-        if (!hoveredKeysRef.current.has(heroCells[ci].key)) {
-          setActiveIndices((prev) => {
-            const resting = [0, 1, 2, 3, 4].find((i) => !prev.includes(i))
-            if (resting === undefined) return prev
-            const next = [...prev]
-            next[ci] = resting
-            return next
-          })
-        }
-        const jitter = ROTATE_INTERVAL_MS + (Math.random() * ROTATE_JITTER_MS - ROTATE_JITTER_MS / 2)
-        timeoutIds[ci] = window.setTimeout(tick, jitter)
-      }
-      timeoutIds[ci] = window.setTimeout(tick, ci * STAGGER_MS + Math.random() * 500)
+    const setPhase = (ci: number, phase: 'photo' | 'color') => {
+      phasesRef.current[ci] = phase
+      setPhases((prev) => {
+        const next = [...prev]
+        next[ci] = phase
+        return next
+      })
     }
 
-    heroCells.forEach((_, ci) => scheduleCell(ci))
+    // Color dip is over — pick the resting photo and fade back to a photo.
+    const swapAndReturn = (ci: number) => {
+      setActiveIndices((prev) => {
+        const resting = [0, 1, 2, 3, 4].find((i) => !prev.includes(i))
+        if (resting === undefined) return prev
+        const next = [...prev]
+        next[ci] = resting
+        return next
+      })
+      setPhase(ci, 'photo')
+      timeoutIds[ci] = window.setTimeout(() => waitThenDip(ci), randomBetween(PHOTO_HOLD_MS, HOLD_JITTER_MS))
+    }
 
-    return () => timeoutIds.forEach((id) => clearTimeout(id))
+    // Enter the color dip right now, skipping any remaining wait.
+    const enterColorNow = (ci: number) => {
+      setPhase(ci, 'color')
+      timeoutIds[ci] = window.setTimeout(() => swapAndReturn(ci), randomBetween(COLOR_HOLD_MS, COLOR_JITTER_MS))
+    }
+
+    // Photo is showing (or hovered/frozen) — wait, then dip into the
+    // cell's own color before the next photo takes over.
+    const waitThenDip = (ci: number) => {
+      if (hoveredKeysRef.current.has(heroCells[ci].key)) {
+        timeoutIds[ci] = window.setTimeout(() => waitThenDip(ci), 500)
+        return
+      }
+      enterColorNow(ci)
+    }
+
+    // Fully random start per cell, rather than an even stagger, so cells
+    // never fall into a repeating rhythm relative to one another.
+    heroCells.forEach((_, ci) => {
+      timeoutIds[ci] = window.setTimeout(() => waitThenDip(ci), Math.random() * PHOTO_HOLD_MS)
+    })
+
+    // At least one cell should always be mid-transition — if a gap opens up
+    // where every cell is just sitting on a photo, pull a random eligible
+    // one into its color dip immediately instead of waiting it out.
+    const watchdog = window.setInterval(() => {
+      if (phasesRef.current.includes('color')) return
+      const candidates = heroCells
+        .map((_, i) => i)
+        .filter((i) => !hoveredKeysRef.current.has(heroCells[i].key))
+      if (candidates.length === 0) return
+      const ci = candidates[Math.floor(Math.random() * candidates.length)]
+      clearTimeout(timeoutIds[ci])
+      enterColorNow(ci)
+    }, 700)
+
+    return () => {
+      timeoutIds.forEach((id) => clearTimeout(id))
+      clearInterval(watchdog)
+    }
   }, [])
 
   return (
-    <div>
-      <div className={styles.hero}>
+    <PageImageGate images={homeImages}>
+      <div>
+        <div className={styles.hero}>
         {/* Title Cell */}
         <div className={styles.titleCell}>
           <h1 className={styles.titleText}>
@@ -132,6 +186,7 @@ export default function Home() {
                 backgroundColor: cell.color,
               }}
               data-cell={cell.key}
+              data-phase={phases[ci]}
               ref={(el) => {
                 if (el) {
                   cellRefs.current.set(cell.key, { element: el, visible: false })
@@ -157,6 +212,12 @@ export default function Home() {
                   />
                 )
               })}
+
+              <div
+                className={styles.colorTint}
+                style={{ backgroundColor: cell.color }}
+                aria-hidden="true"
+              />
 
               {activeUrl && (
                 <div
@@ -190,6 +251,7 @@ export default function Home() {
           About &amp; booking →
         </Link>
       </div>
-    </div>
+      </div>
+    </PageImageGate>
   )
 }
