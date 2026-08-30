@@ -5,14 +5,14 @@
 
 export const palette = {
   /** Page field. The site's "white". */
-  bg: '#f4f4f4',
+  bg: '#f6f6f6',
   /** Near-black. Text, borders, footer, hero wordmark. */
   ink: '#111111',
-  green: '#17914f',
-  crimson: '#bf0a34',
-  navy: '#123a70',
-  purple: '#8c00fa',
-  gold: '#ffc627',
+  green: '#299c5b',
+  crimson: '#bf023c',
+  navy: '#1c4587',
+  purple: '#9811ff',
+  gold: '#fbca0a',
 } as const
 
 export type PaletteKey = keyof typeof palette
